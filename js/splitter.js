@@ -5,14 +5,15 @@ angular.module('bgDirectives', [])
       replace: true,
       transclude: true,
       scope: {
-        orientation: '@'
-      },      
+        orientation: '@',
+        onDrag: '&'
+      },
       template: '<div class="split-panes {{orientation}}" ng-transclude></div>',
       controller: ['$scope', function ($scope) {
         $scope.panes = [];
-        
+
         this.addPane = function(pane){
-          if ($scope.panes.length > 1) 
+          if ($scope.panes.length > 1)
             throw 'splitters can only have two panes';
           $scope.panes.push(pane);
           return $scope.panes.length;
@@ -26,15 +27,15 @@ angular.module('bgDirectives', [])
         var pane1Min = pane1.minSize || 0;
         var pane2Min = pane2.minSize || 0;
         var drag = false;
-        
+
         pane1.elem.after(handler);
-        
+
         element.bind('mousemove', function (ev) {
           if (!drag) return;
-          
+
           var bounds = element[0].getBoundingClientRect();
           var pos = 0;
-          
+
           if (vertical) {
 
             var height = bounds.bottom - bounds.top;
@@ -46,7 +47,7 @@ angular.module('bgDirectives', [])
             handler.css('top', pos + 'px');
             pane1.elem.css('height', pos + 'px');
             pane2.elem.css('top', pos + 'px');
-      
+
           } else {
 
             var width = bounds.right - bounds.left;
@@ -59,13 +60,17 @@ angular.module('bgDirectives', [])
             pane1.elem.css('width', pos + 'px');
             pane2.elem.css('left', pos + 'px');
           }
+
+          if (scope.onDrag) {
+            scope.onDrag();
+          }
         });
-    
-        handler.bind('mousedown', function (ev) { 
+
+        handler.bind('mousedown', function (ev) {
           ev.preventDefault();
-          drag = true; 
+          drag = true;
         });
-    
+
         angular.element(document).bind('mouseup', function (ev) {
           drag = false;
         });
