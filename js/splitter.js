@@ -69,7 +69,6 @@ angular.module('bgDirectives', [])
 
         handler.bind('mousedown touchstart', function (ev) {
           ev.preventDefault();
-          console.log('hihi');
           drag = true;
         });
 
