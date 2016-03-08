@@ -30,16 +30,17 @@ angular.module('bgDirectives', [])
 
         pane1.elem.after(handler);
 
-        element.bind('mousemove', function (ev) {
+        element.bind('mousemove touchmove', function (ev) {
+
           if (!drag) return;
 
           var bounds = element[0].getBoundingClientRect();
           var pos = 0;
+          var touch = ev.originalEvent.touches ? ev.originalEvent.touches[0] : ev.originalEvent;
 
           if (vertical) {
-
             var height = bounds.bottom - bounds.top;
-            pos = ev.clientY - bounds.top;
+            pos = touch.pageY - bounds.top;
 
             if (pos < pane1Min) return;
             if (height - pos < pane2Min) return;
@@ -51,7 +52,7 @@ angular.module('bgDirectives', [])
           } else {
 
             var width = bounds.right - bounds.left;
-            pos = ev.clientX - bounds.left;
+            pos = touch.pageX - bounds.left;
 
             if (pos < pane1Min) return;
             if (width - pos < pane2Min) return;
@@ -66,12 +67,13 @@ angular.module('bgDirectives', [])
           }
         });
 
-        handler.bind('mousedown', function (ev) {
+        handler.bind('mousedown touchstart', function (ev) {
           ev.preventDefault();
+          console.log('hihi');
           drag = true;
         });
 
-        angular.element(document).bind('mouseup', function (ev) {
+        angular.element(document).bind('mouseup touchend', function (ev) {
           drag = false;
         });
       }
