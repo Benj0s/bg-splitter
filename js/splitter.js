@@ -72,7 +72,7 @@ angular.module('bgDirectives', [])
           drag = true;
         });
 
-        angular.element(document).bind('mouseup touchend', function (ev) {
+        angular.element(document).bind('mouseup mouseleave touchend', function (ev) {
           drag = false;
         });
       }
